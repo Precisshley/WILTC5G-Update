@@ -52,26 +52,11 @@ let analogsticky;
 
 function setup() {
   //use this when lag is fixed vvv
-  //                           pixelDensity(15) 
-  let cosX,
-    sinY,
-    tanX,
-    tanY,
-    atanY,
-    secX,
-    cscY,
-    cotY,
-    acotY,
-    start0,
-    start1,
-    start2,
-    starty0,
-    starty1,
-    starty2,
-    startw0,
-    startw1,
-    startw2,
-    turn;
+  //                           pixelDensity(15)
+  let start,
+    starty,
+    startw
+  
   for (let i = 0; i < 12; i++) {
     click = i;
     buttonUpdate(0);
@@ -85,11 +70,12 @@ function setup() {
     createCanvas(windowWidth, windowWidth);
   }
 
-//   for (var i = 0; i < 500; i++) {
-//     //fill array with different individual values
-//     data[i] = i * pointSpacing;
-//   }
+  //   for (var i = 0; i < 500; i++) {
+  //     //fill array with different individual values
+  //     data[i] = i * pointSpacing;
+  //   }
   // whaaa = 1;
+
 }
 
 function windowResized() {
@@ -183,7 +169,7 @@ function timeIt() {
     }
   } else if (Math.abs(analogStickMap) < Math.abs(analogsticky)) {
     if (analogsticky == 1) {
-      if (click == 11) {
+      if (click == 10) {
         click = 0;
       } else {
         click++;
@@ -291,24 +277,24 @@ function buttonUpdate(m) {
     } else if (lineSettings == 0) {
       pointSpacing = pointSpacing + m;
       menu4.innerText =
-        "Lines: LINES" + "\nLine Spacing: " + nf(pointSpacing - 1, 0, 0) + "/9";
+        "Lines: TRIANGLES" + "\nLine Spacing: " + nf(pointSpacing - 1, 0, 0) + "/9";
     } else {
       pointSpacing = pointSpacing + m;
       menu4.innerText =
-        "Lines: TRIANGLES" +
+        "Lines: LINES" +
         "\nLine Spacing: " +
         nf(pointSpacing - 1, 0, 0) +
         "/9";
     }
-  } else if (click == 3 && polar + m >= 0 && polar + m <= 3) {
+  } else if (click == 3 && polar + m >= 0) {
     polar = polar + m;
-    menu5.innerText = "Polarity: " + nf(polar, 0, 0) + "/3";
+    menu5.innerText = "Polarity: " + nf(polar, 0, 0);
   } else if (click == 4 && mode + m >= 1 && mode + m <= 8) {
     mode = mode + m;
     menu6.innerText = "Mode: " + nf(mode - 1, 0, 0) + "/7";
   } else if (click == 6 && amount + -m >= 1 && amount + -m <= 500) {
     amount = amount + -m;
-    menu7.innerText = "Amount: " + nf(501-amount, 0, 0) + "/500";
+    menu7.innerText = "Amount: " + nf(501 - amount, 0, 0) + "/500";
   } else if (click == 7 && twist + m >= 1 && twist + m <= 500) {
     twist = twist + m;
     menu8.innerText = "Twist: " + nf(twist, 0, 0);
@@ -407,12 +393,12 @@ window.addEventListener(
           amount +
           "-" +
           twist +
-          "-" + 
+          "-" +
           whaaa +
           ".png"
       );
     } else if (event.detail.name == "FACE_2") {
-//empty for whatever
+      //empty for whatever
     } else if (event.detail.name == "FACE_3") {
       if (click == 1) {
         if (transSettings == 2) {
@@ -466,7 +452,6 @@ window.addEventListener(
   false
 );
 
-
 window.addEventListener(
   "gc.button.hold",
   function (event) {
@@ -489,134 +474,45 @@ window.addEventListener(
   false
 );
 
-function f1(x, y) {
-  return x * Math.cos(radians(y));
-}
-function f2(x, y) {
-  return x * Math.sin(radians(y));
+function fnew(x, y, level) {
+  if (level != 0) {
+    for (var i = 0; i < level; i++) {
+      xnew = x * Math.cos(radians(y));
+      ynew = x * Math.sin(radians(y));
+      x = xnew;
+      y = ynew;
+    }
+  }
+  return [x, y];
 }
 
-function plots(line1x, line1y, line2x, line2y, line3x, line3y) {
+function plots(x1, y1, x2, y2, x3, y3) {
   fill(255, 255, 255, fillTrans);
   //color idea
-  stroke(line1x + 150, line2x + 150, line3x + 150, lineTrans);
-  fill(line1y + 150, line2y + 150, line3y + 150, fillTrans);
-  if (polar == 0 && lineSettings == 1) {
-    point(line1x, line1y);
-  } else if (polar == 0 && lineSettings == 2) {
-    triangle(line1x, line1y, line2x, line2y, line3x, line3y);
-  } else if (polar == 0) {
-    line(line1x, line1y, line2x, line2y);
-  } else if (polar == 1 && lineSettings == 1) {
-    point(f1(line1x, line1y), f2(line1x, line1y));
-  } else if (polar == 1 && lineSettings == 2) {
-    triangle(
-      f1(line1x, line1y),
-      f2(line1x, line1y),
-      f1(line2x, line2y),
-      f2(line2x, line2y),
-      f1(line3x, line3y),
-      f2(line3x, line3y)
+  stroke(x1 + 150, x2 + 150, x3 + 150, lineTrans);
+  fill(y1 + 150, y2 + 150, y3 + 150, fillTrans);
+  if (lineSettings == 1) {
+   point.apply(this, fnew(x1, y1, polar));
+  } else if (lineSettings == 2) {
+        line.apply(
+      this, fnew(x1, y1, polar).concat(fnew(x2, y2, polar))
     );
-  } else if (polar == 1) {
-    line(
-      f1(line1x, line1y),
-      f2(line1x, line1y),
-      f1(line2x, line2y),
-      f2(line2x, line2y)
-    );
-  } else if (polar == 2 && lineSettings == 1) {
-    point(
-      f1(f1(line1x, line1y), f2(line1x, line1y)),
-      f2(f1(line1x, line1y), f2(line1x, line1y))
-    );
-  } else if (polar == 2 && lineSettings == 2) {
-    triangle(
-      f1(f1(line1x, line1y), f2(line1x, line1y)),
-      f2(f1(line1x, line1y), f2(line1x, line1y)),
-      f1(f1(line2x, line2y), f2(line2x, line2y)),
-      f2(f1(line2x, line2y), f2(line2x, line2y)),
-      f1(f1(line3x, line3y), f2(line3x, line3y)),
-      f2(f1(line3x, line3y), f2(line3x, line3y))
-    );
-  } else if (polar == 2) {
-    line(
-      f1(f1(line1x, line1y), f2(line1x, line1y)),
-      f2(f1(line1x, line1y), f2(line1x, line1y)),
-      f1(f1(line2x, line2y), f2(line2x, line2y)),
-      f2(f1(line2x, line2y), f2(line2x, line2y))
-    );
-  } else if (polar == 3 && lineSettings == 1) {
-    point(
-      f1(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      ),
-      f2(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      )
-    );
-  } else if (polar == 3 && lineSettings == 2) {
-    triangle(
-      
-      //xcos(y)cos(xsin(y))cos(xcos(y)sin(xsin(y)))
-      f1(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      ),
-      f2(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      ),
-      f1(
-        f1(f1(line2x, line2y), f2(line2x, line2y)),
-        f2(f1(line2x, line2y), f2(line2x, line2y))
-      ),
-      f2(
-        f1(f1(line2x, line2y), f2(line2x, line2y)),
-        f2(f1(line2x, line2y), f2(line2x, line2y))
-      ),
-      f1(
-        f1(f1(line3x, line3y), f2(line3x, line3y)),
-        f2(f1(line3x, line3y), f2(line3x, line3y))
-      ),
-      f2(
-        f1(f1(line3x, line3y), f2(line3x, line3y)),
-        f2(f1(line3x, line3y), f2(line3x, line3y))
-      )
-    );
-  } else if (polar == 3) {
-    line(
-      f1(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      ),
-      f2(
-        f1(f1(line1x, line1y), f2(line1x, line1y)),
-        f2(f1(line1x, line1y), f2(line1x, line1y))
-      ),
-      f1(
-        f1(f1(line2x, line2y), f2(line2x, line2y)),
-        f2(f1(line2x, line2y), f2(line2x, line2y))
-      ),
-      f2(
-        f1(f1(line2x, line2y), f2(line2x, line2y)),
-        f2(f1(line2x, line2y), f2(line2x, line2y))
-      )
+  } else {
+    triangle.apply(
+      this, fnew(x1, y1, polar).concat(fnew(x2, y2, polar)).concat(fnew(x3, y3, polar))
     );
   }
 }
 
-function simplecalc(uno, dos, tres, quatro, sinco) {
-  return ((uno + tres * quatro) / dos) * sinco;
+function simplecalc(a, b, e) {
+  return [(a / b) * e, ((a + pointSpacing) / b) * e, ((a + pointSpacing * 2) / b) * e];
 }
 
 function draw() {
-
-  fill(255);
-  let fps = frameRate();
-  text("FPS: " + fps.toFixed(2), 10, height - 10);
+  // fill(255);
+  // let fps = frameRate();
+  // text("FPS: " + fps.toFixed(2), 10, height - 10);
+    // console.log("FPS: " + frameRate().toFixed(2));
 
   if (trails == 0) {
     blendMode(BLEND);
@@ -624,6 +520,8 @@ function draw() {
     rect(0, 0, width, height);
   }
   blendMode(bmode);
+
+  
   
   for (var i = 0; i < data; i++) {
     //points based on clone count of self. Not values inside the array
@@ -633,134 +531,114 @@ function draw() {
       translate(width / 2, height / 2);
       rotate(radians(i * radi));
 
-      freshStuff = i * pointSpacing + (movement*speed);
-      //ADD HERE
-      turn = twist;
-      // simplecalc(data[i], distance, pointSpacing, 0);
-      start0 = simplecalc(freshStuff, distance, pointSpacing, 0, 1);
-      start1 = simplecalc(freshStuff, distance, pointSpacing, 1, 1);
-      start2 = simplecalc(freshStuff, distance, pointSpacing, 2, 1);
+      dataNew = i * pointSpacing + movement * speed;
 
-      // (uno + tres * quatro) / dos;
-      // (((data[i] + pointSpacing * 2) / yeet) * turn)
-      starty0 = simplecalc(freshStuff, yeet, pointSpacing, 0, turn);
-      starty1 = simplecalc(freshStuff, yeet, pointSpacing, 1, turn);
-      starty2 = simplecalc(freshStuff, whaaa, pointSpacing, 2, turn);
-      startw0 = simplecalc(freshStuff, whaaa, pointSpacing, 0, turn);
-      startw1 = simplecalc(freshStuff, whaaa, pointSpacing, 1, turn);
-      startw2 = simplecalc(freshStuff, whaaa, pointSpacing, 2, turn);
-      // start = data[i] / distance;
+      start = simplecalc(dataNew, distance, 1);
+      starty = simplecalc(dataNew, yeet, twist);
+      startw = simplecalc(dataNew, whaaa, twist);
 
-      cosX = start0 * Math.cos(starty0);
-      sinY = start0 * Math.sin(startw0);
-      tanX = start0 * Math.tan(starty0);
-      tanY = start0 * Math.tan(startw0);
-      atanY = start0 * Math.atan(startw0);
-      secX = start0 / Math.cos(starty0);
-      cscY = start0 / Math.sin(startw0);
-      cotY = start0 / Math.tan(startw0);
-      acotY = start0 / Math.atan(startw0);
+      //radians 
 
-      if (colour == 0) {
-        colorMode(HSB);
-        stroke(map(i, 0, data, 0, 360), 100, 50, lineTrans);
-        colorMode(RGB, 255);
-      } else if (colour == 1) {
-        stroke(255, lineTrans);
-      } else if (colour == 2) {
-        stroke(
-          map(i, 0, data, 0, 255),
-          map(i, 0, data, 0, 255),
-          map(i, 0, data, 0, 255),
-          lineTrans
-        );
-      } else if (colour == 3) {
-        stroke(
-          map(i, 0, data, 255, 0),
-          map(i, 0, data, 255, 0),
-          map(i, 0, data, 255, 0),
-          lineTrans
-        );
-      } else if (colour == 4) {
-        stroke(
-          map(i, 0, data, 100, 0),
-          map(i, 0, data, 0, 100),
-          map(i, 0, data, 0, 100),
-          lineTrans
-        );
-      }
+      // if (colour == 0) {
+      //   colorMode(HSB);
+      //   stroke(map(i, 0, data, 0, 360), 100, 50, lineTrans);
+      //   colorMode(RGB, 255);
+      // } else if (colour == 1) {
+      //   stroke(255, lineTrans);
+      // } else if (colour == 2) {
+      //   stroke(
+      //     map(i, 0, data, 0, 255),
+      //     map(i, 0, data, 0, 255),
+      //     map(i, 0, data, 0, 255),
+      //     lineTrans
+      //   );
+      // } else if (colour == 3) {
+      //   stroke(
+      //     map(i, 0, data, 255, 0),
+      //     map(i, 0, data, 255, 0),
+      //     map(i, 0, data, 255, 0),
+      //     lineTrans
+      //   );
+      // } else if (colour == 4) {
+      //   stroke(
+      //     map(i, 0, data, 100, 0),
+      //     map(i, 0, data, 0, 100),
+      //     map(i, 0, data, 0, 100),
+      //     lineTrans
+      //   );
+      // }
 
       if (mode == 1) {
         plots(
-          cosX,
-          sinY,
-          start1 * Math.cos(starty1),
-          start1 * Math.sin(startw1),
-          start2 * Math.cos(starty2),
-          start2 * Math.sin(startw2)
+          start[0] * Math.cos(starty[0]),
+          start[0] * Math.sin(startw[0]),
+          start[1] * Math.cos(starty[1]),
+          start[1] * Math.sin(startw[1]),
+          start[2] * Math.cos(starty[2]),
+          start[2] * Math.sin(startw[2])
         );
       } else if (mode == 2) {
         plots(
-          cosX,
-          tanY,
-          start1 * Math.cos(starty1),
-          start1 * Math.tan(startw1),
-          start2 * Math.cos(starty2),
-          start2 * Math.tan(startw2)
+          start[0] * Math.cos(starty[0]),
+          start[0] * Math.tan(startw[0]),
+          start[1] * Math.cos(starty[1]),
+          start[1] * Math.tan(startw[1]),
+          start[2] * Math.cos(starty[2]),
+          start[2] * Math.tan(startw[2])
         );
       } else if (mode == 3) {
         plots(
-          tanX,
-          tanY,
-          start1 * Math.tan(starty1),
-          start1 * Math.tan(startw1),
-          start2 * Math.tan(starty2),
-          start2 * Math.tan(startw2)
+          start[0] * Math.tan(starty[0]),
+          start[0] * Math.tan(startw[0]),
+          start[1] * Math.tan(starty[1]),
+          start[1] * Math.tan(startw[1]),
+          start[2] * Math.tan(starty[2]),
+          start[2] * Math.tan(startw[2])
         );
       } else if (mode == 4) {
         plots(
-          cosX,
-          atanY,
-          start1 * Math.cos(starty1),
-          start1 * Math.atan(startw1),
-          start2 * Math.cos(starty2),
-          start2 * Math.atan(startw2)
+          start[0] * Math.cos(starty[0]),
+          start[0] * Math.atan(startw[0]),
+          start[1] * Math.cos(starty[1]),
+          start[1] * Math.atan(startw[1]),
+          start[2] * Math.cos(starty[2]),
+          start[2] * Math.atan(startw[2])
         );
       } else if (mode == 5) {
         plots(
-          secX,
-          sinY,
-          start1 * (1 / Math.cos(starty1)),
-          start1 * Math.sin(startw1),
-          start2 * (1 / Math.cos(starty2)),
-          start2 * Math.sin(startw2)
+          start[0] / Math.cos(starty[0]),
+          start[0] * Math.sin(startw[0]),
+          start[1] * (1 / Math.cos(starty[1])),
+          start[1] * Math.sin(startw[1]),
+          start[2] * (1 / Math.cos(starty[2])),
+          start[2] * Math.sin(startw[2])
         );
       } else if (mode == 6) {
         plots(
-          secX,
-          cscY,
-          start1 * (1 / Math.cos(starty1)),
-          start1 * (1 / Math.sin(startw1)),
-          start2 * (1 / Math.cos(starty2)),
-          start2 * (1 / Math.sin(startw2))
+          start[0] / Math.cos(starty[0]),
+          start[0] / Math.sin(startw[0]),
+          start[1] * (1 / Math.cos(starty[1])),
+          start[1] * (1 / Math.sin(startw[1])),
+          start[2] * (1 / Math.cos(starty[2])),
+          start[2] * (1 / Math.sin(startw[2]))
         );
       } else if (mode == 7) {
         plots(
-          secX,
-          cotY,
-          start1 * (1 / Math.cos(starty1)),
-          start1 * (1 / Math.tan(startw1)),
-          start2 * (1 / Math.cos(starty2)),
-          start2 * (1 / Math.tan(startw2))
+          start[0] / Math.cos(starty[0]),
+          start[0] / Math.tan(startw[0]),
+          start[1] * (1 / Math.cos(starty[1])),
+          start[1] * (1 / Math.tan(startw[1])),
+          start[2] * (1 / Math.cos(starty[2])),
+          start[2] * (1 / Math.tan(startw[2]))
         );
       } else if (mode == 8) {
         plots(
-          secX,
-          acotY,
-          start1 * (1 / Math.cos(starty1)),
-          start1 * (1 / Math.atan(startw1)),
-          start2 * (1 / Math.cos(starty2)),
-          start2 * (1 / Math.atan(startw2))
+          start[0] / Math.cos(starty[0]),
+          start[0] / Math.atan(startw[0]),
+          start[1] * (1 / Math.cos(starty[1])),
+          start[1] * (1 / Math.atan(startw[1])),
+          start[2] * (1 / Math.cos(starty[2])),
+          start[2] * (1 / Math.atan(startw[2]))
         );
       }
     }
