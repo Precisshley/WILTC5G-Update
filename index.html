@@ -1,33 +1,31 @@
 <!DOCTYPE html><html lang="en"><head>
     <script src="p5.js"></script>
     <script src="p5.sound.min.js"></script>
-    <script src="dat.gui.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
+
+    <script src="Controller.js"></script>
+    <script src="Controller.layouts.js"></script>
   </head>
   <body>
     <main></main>
+    <div class="left">
     <script src="sketch.js"></script>
-<!--     <div class="slidecontainer">
-      <input
-        type="range"
-        min="1"
-        max="100"
-        value="50"
-        class="slider"
-        id="myRange"
-      />
-      <p>Value: <span id="demo"></span></p>
     </div>
-    <script>
-      var slider = document.getElementById("myRange");
-      var output = document.getElementById("demo");
-      output.innerHTML = slider.value;
-
-      slider.oninput = function() {
-        output.innerHTML = this.value;
-      }
-    </script> -->
+    <div class="right">
+    <button id="Distance" onclick="mybutton(0)">Distance:</button>
+    <button id="Transparency" onclick="mybutton(1)">Transparency:</button>
+    <button id="Radians" onclick="mybutton(2)">Radians:</button>
+    <button id="Polarity" onclick="mybutton(3)">Polarity:</button>
+    <button id="Mode" onclick="mybutton(4)">Mode:</button>
+    <button id="Lines" onclick="mybutton(5)">Lines:</button>
+    <button id="Amount" onclick="mybutton(6)">Amount:</button>
+    <button id="Twist" onclick="mybutton(7)">Twist:</button>
+    <button id="BlendMode" onclick="mybutton(8)">BlendMode:</button>
+    <button id="Colour" onclick="mybutton(9)">Colour:</button>
+    <button id="Beans" onclick="mybutton(10)">Beans:</button>
+    </div>
   
 
 </body></html>
