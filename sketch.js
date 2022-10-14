@@ -46,17 +46,26 @@ let check = 1;
 let analogStickTimer;
 let analogsticky;
 
+let array_of_functions = [
+  mode1,
+  mode2,
+  mode3,
+  mode4,
+  mode5,
+  mode6,
+  mode7,
+  mode8,
+];
+
 // function changeTimer() {
 //             t = t++;
 //         }
 
 function setup() {
   //use this when lag is fixed vvv
-  //                           pixelDensity(15)
-  let start,
-    starty,
-    startw
-  
+  // pixelDensity(15)
+  let start, starty, startw;
+
   for (let i = 0; i < 12; i++) {
     click = i;
     buttonUpdate(0);
@@ -75,7 +84,6 @@ function setup() {
   //     data[i] = i * pointSpacing;
   //   }
   // whaaa = 1;
-
 }
 
 function windowResized() {
@@ -277,14 +285,14 @@ function buttonUpdate(m) {
     } else if (lineSettings == 0) {
       pointSpacing = pointSpacing + m;
       menu4.innerText =
-        "Lines: TRIANGLES" + "\nLine Spacing: " + nf(pointSpacing - 1, 0, 0) + "/9";
-    } else {
-      pointSpacing = pointSpacing + m;
-      menu4.innerText =
-        "Lines: LINES" +
+        "Lines: TRIANGLES" +
         "\nLine Spacing: " +
         nf(pointSpacing - 1, 0, 0) +
         "/9";
+    } else {
+      pointSpacing = pointSpacing + m;
+      menu4.innerText =
+        "Lines: LINES" + "\nLine Spacing: " + nf(pointSpacing - 1, 0, 0) + "/9";
     }
   } else if (click == 3 && polar + m >= 0) {
     polar = polar + m;
@@ -492,27 +500,113 @@ function plots(x1, y1, x2, y2, x3, y3) {
   stroke(x1 + 150, x2 + 150, x3 + 150, lineTrans);
   fill(y1 + 150, y2 + 150, y3 + 150, fillTrans);
   if (lineSettings == 1) {
-   point.apply(this, fnew(x1, y1, polar));
+    point.apply(this, fnew(x1, y1, polar));
   } else if (lineSettings == 2) {
-        line.apply(
-      this, fnew(x1, y1, polar).concat(fnew(x2, y2, polar))
-    );
+    line.apply(this, fnew(x1, y1, polar).concat(fnew(x2, y2, polar)));
   } else {
     triangle.apply(
-      this, fnew(x1, y1, polar).concat(fnew(x2, y2, polar)).concat(fnew(x3, y3, polar))
+      this,
+      fnew(x1, y1, polar)
+        .concat(fnew(x2, y2, polar))
+        .concat(fnew(x3, y3, polar))
     );
   }
 }
 
 function simplecalc(a, b, e) {
-  return [(a / b) * e, ((a + pointSpacing) / b) * e, ((a + pointSpacing * 2) / b) * e];
+  return [
+    (a / b) * e,
+    ((a + pointSpacing) / b) * e,
+    ((a + pointSpacing * 2) / b) * e,
+  ];
+}
+
+function mode1(start, starty, startw) {
+  plots(
+    start[0] * Math.cos(starty[0]),
+    start[0] * Math.sin(startw[0]),
+    start[1] * Math.cos(starty[1]),
+    start[1] * Math.sin(startw[1]),
+    start[2] * Math.cos(starty[2]),
+    start[2] * Math.sin(startw[2])
+  );
+}
+function mode2(start, starty, startw) {
+  plots(
+    start[0] * Math.cos(starty[0]),
+    start[0] * Math.tan(startw[0]),
+    start[1] * Math.cos(starty[1]),
+    start[1] * Math.tan(startw[1]),
+    start[2] * Math.cos(starty[2]),
+    start[2] * Math.tan(startw[2])
+  );
+}
+function mode3(start, starty, startw) {
+  plots(
+    start[0] * Math.tan(starty[0]),
+    start[0] * Math.tan(startw[0]),
+    start[1] * Math.tan(starty[1]),
+    start[1] * Math.tan(startw[1]),
+    start[2] * Math.tan(starty[2]),
+    start[2] * Math.tan(startw[2])
+  );
+}
+function mode4(start, starty, startw) {
+  plots(
+    start[0] * Math.cos(starty[0]),
+    start[0] * Math.atan(startw[0]),
+    start[1] * Math.cos(starty[1]),
+    start[1] * Math.atan(startw[1]),
+    start[2] * Math.cos(starty[2]),
+    start[2] * Math.atan(startw[2])
+  );
+}
+function mode5(start, starty, startw) {
+  plots(
+    start[0] / Math.cos(starty[0]),
+    start[0] * Math.sin(startw[0]),
+    start[1] * (1 / Math.cos(starty[1])),
+    start[1] * Math.sin(startw[1]),
+    start[2] * (1 / Math.cos(starty[2])),
+    start[2] * Math.sin(startw[2])
+  );
+}
+function mode6(start, starty, startw) {
+  plots(
+    start[0] / Math.cos(starty[0]),
+    start[0] / Math.sin(startw[0]),
+    start[1] * (1 / Math.cos(starty[1])),
+    start[1] * (1 / Math.sin(startw[1])),
+    start[2] * (1 / Math.cos(starty[2])),
+    start[2] * (1 / Math.sin(startw[2]))
+  );
+}
+function mode7(start, starty, startw) {
+  plots(
+    start[0] / Math.cos(starty[0]),
+    start[0] / Math.tan(startw[0]),
+    start[1] * (1 / Math.cos(starty[1])),
+    start[1] * (1 / Math.tan(startw[1])),
+    start[2] * (1 / Math.cos(starty[2])),
+    start[2] * (1 / Math.tan(startw[2]))
+  );
+}
+function mode8(start, starty, startw) {
+  plots(
+    start[0] / Math.cos(starty[0]),
+    start[0] / Math.atan(startw[0]),
+    start[1] * (1 / Math.cos(starty[1])),
+    start[1] * (1 / Math.atan(startw[1])),
+    start[2] * (1 / Math.cos(starty[2])),
+    start[2] * (1 / Math.atan(startw[2]))
+  );
 }
 
 function draw() {
   // fill(255);
   // let fps = frameRate();
   // text("FPS: " + fps.toFixed(2), 10, height - 10);
-    // console.log("FPS: " + frameRate().toFixed(2));
+  // console.log("FPS: " + frameRate().toFixed(2));
 
   if (trails == 0) {
     blendMode(BLEND);
@@ -521,8 +615,6 @@ function draw() {
   }
   blendMode(bmode);
 
-  
-  
   for (var i = 0; i < data; i++) {
     //points based on clone count of self. Not values inside the array
     push();
@@ -537,7 +629,7 @@ function draw() {
       starty = simplecalc(dataNew, yeet, twist);
       startw = simplecalc(dataNew, whaaa, twist);
 
-      //radians 
+      //radians
 
       // if (colour == 0) {
       //   colorMode(HSB);
@@ -568,79 +660,7 @@ function draw() {
       //   );
       // }
 
-      if (mode == 1) {
-        plots(
-          start[0] * Math.cos(starty[0]),
-          start[0] * Math.sin(startw[0]),
-          start[1] * Math.cos(starty[1]),
-          start[1] * Math.sin(startw[1]),
-          start[2] * Math.cos(starty[2]),
-          start[2] * Math.sin(startw[2])
-        );
-      } else if (mode == 2) {
-        plots(
-          start[0] * Math.cos(starty[0]),
-          start[0] * Math.tan(startw[0]),
-          start[1] * Math.cos(starty[1]),
-          start[1] * Math.tan(startw[1]),
-          start[2] * Math.cos(starty[2]),
-          start[2] * Math.tan(startw[2])
-        );
-      } else if (mode == 3) {
-        plots(
-          start[0] * Math.tan(starty[0]),
-          start[0] * Math.tan(startw[0]),
-          start[1] * Math.tan(starty[1]),
-          start[1] * Math.tan(startw[1]),
-          start[2] * Math.tan(starty[2]),
-          start[2] * Math.tan(startw[2])
-        );
-      } else if (mode == 4) {
-        plots(
-          start[0] * Math.cos(starty[0]),
-          start[0] * Math.atan(startw[0]),
-          start[1] * Math.cos(starty[1]),
-          start[1] * Math.atan(startw[1]),
-          start[2] * Math.cos(starty[2]),
-          start[2] * Math.atan(startw[2])
-        );
-      } else if (mode == 5) {
-        plots(
-          start[0] / Math.cos(starty[0]),
-          start[0] * Math.sin(startw[0]),
-          start[1] * (1 / Math.cos(starty[1])),
-          start[1] * Math.sin(startw[1]),
-          start[2] * (1 / Math.cos(starty[2])),
-          start[2] * Math.sin(startw[2])
-        );
-      } else if (mode == 6) {
-        plots(
-          start[0] / Math.cos(starty[0]),
-          start[0] / Math.sin(startw[0]),
-          start[1] * (1 / Math.cos(starty[1])),
-          start[1] * (1 / Math.sin(startw[1])),
-          start[2] * (1 / Math.cos(starty[2])),
-          start[2] * (1 / Math.sin(startw[2]))
-        );
-      } else if (mode == 7) {
-        plots(
-          start[0] / Math.cos(starty[0]),
-          start[0] / Math.tan(startw[0]),
-          start[1] * (1 / Math.cos(starty[1])),
-          start[1] * (1 / Math.tan(startw[1])),
-          start[2] * (1 / Math.cos(starty[2])),
-          start[2] * (1 / Math.tan(startw[2]))
-        );
-      } else if (mode == 8) {
-        plots(
-          start[0] / Math.cos(starty[0]),
-          start[0] / Math.atan(startw[0]),
-          start[1] * (1 / Math.cos(starty[1])),
-          start[1] * (1 / Math.atan(startw[1])),
-          start[2] * (1 / Math.cos(starty[2])),
-          start[2] * (1 / Math.atan(startw[2]))
-        );
-      }
+      array_of_functions[mode - 1](start, starty, startw);
     }
     pop();
   }
