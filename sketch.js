@@ -1,17 +1,14 @@
 //THINGS TO DO:
 //add more colours
 //add preset codes
-//add yeet component of beans(whaaa)
-//steamedHams is a great variable name
 
 let data = 500; //points generated//
 let movement = 0;
 
-//you know what this means (probably)//
 let whaaa = 1;
 let yeet = 1;
 
-let distance = 20; //distance (obviously!)//
+let distance = 20; //distance//
 let mode = 1; //graph render setting//
 let polar = 0; //polarity//
 let radi = 0; //graph rotation//
